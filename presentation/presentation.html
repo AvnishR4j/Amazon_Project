@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Supply Chain Intelligence - Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #ffffff;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 3px solid #FF9900;
+        }
+
+        .slide-title {
+            background: linear-gradient(135deg, #232F3E 0%, #37475A 100%);
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #FF9900;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #FF9900;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #4ecdc4;
+            margin: 20px 0;
+        }
+
+        p, li {
+            font-size: 1.4em;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        ul {
+            margin-left: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.8em;
+            color: #cccccc;
+            margin-bottom: 40px;
+        }
+
+        .highlight {
+            color: #FF9900;
+            font-weight: bold;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #232F3E 0%, #37475A 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 5px solid #FF9900;
+        }
+
+        .metric-value {
+            font-size: 3em;
+            color: #FF9900;
+            font-weight: bold;
+        }
+
+        .metric-label {
+            font-size: 1.2em;
+            color: #cccccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.2em;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #37475A;
+        }
+
+        th {
+            background: #FF9900;
+            color: #232F3E;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 153, 0, 0.1);
+        }
+
+        .best-row {
+            background: rgba(46, 204, 113, 0.3) !important;
+        }
+
+        .code-block {
+            background: #0d1117;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .flow-box {
+            background: #FF9900;
+            color: #232F3E;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: #FF9900;
+        }
+
+        .team-info {
+            font-size: 1.3em;
+            color: #cccccc;
+        }
+
+        .insight-box {
+            background: rgba(78, 205, 196, 0.2);
+            border-left: 5px solid #4ecdc4;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-tag {
+            background: #FF9900;
+            color: #232F3E;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                min-height: auto;
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide slide-title">
+    <h1>Amazon Supply Chain Intelligence</h1>
+    <p class="subtitle">AI-Powered Delivery Delay Risk Prediction System</p>
+    <br><br>
+    <p class="team-info"><strong>Course:</strong> UCS321 - AI for Engineers</p>
+    <p class="team-info"><strong>Project Type:</strong> Mini Project (40 Marks)</p>
+    <br>
+    <p class="team-info"><strong>Team:</strong></p>
+    <ul class="team-info">
+        <li>ARUN AK (Team Lead)</li>
+        <li>[Team Member 2]</li>
+        <li>[Team Member 3]</li>
+        <li>[Team Member 4]</li>
+    </ul>
+</div>
+
+<!-- Slide 2: Problem Statement -->
+<div class="slide">
+    <h2>Problem Statement</h2>
+
+    <div class="insight-box">
+        <h3>The Challenge</h3>
+        <p>Amazon processes <span class="highlight">millions of deliveries daily</span>. Predicting which deliveries are at risk of delay enables proactive intervention and improved customer satisfaction.</p>
+    </div>
+
+    <h3>Our Objective</h3>
+    <p>Build a multi-class classification model to predict delivery delay risk:</p>
+    <ul>
+        <li><span class="highlight">On-Time</span> - Delivery within 90 minutes</li>
+        <li><span class="highlight">At-Risk</span> - Delivery between 91-160 minutes</li>
+        <li><span class="highlight">Delayed</span> - Delivery exceeding 160 minutes</li>
+    </ul>
+
+    <h3>Business Impact</h3>
+    <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-value">15%</div>
+            <div class="metric-label">Reduction in Late Deliveries</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">25%</div>
+            <div class="metric-label">Customer Satisfaction Increase</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">100%</div>
+            <div class="metric-label">At-Risk Order Alerts</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Dataset -->
+<div class="slide">
+    <h2>Dataset Overview</h2>
+
+    <h3>Amazon Delivery Dataset (Kaggle)</h3>
+    <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-value">43,739</div>
+            <div class="metric-label">Total Records</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">16</div>
+            <div class="metric-label">Original Features</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">19</div>
+            <div class="metric-label">Engineered Features</div>
+        </div>
+    </div>
+
+    <h3>Key Features</h3>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Agent_Age, Agent_Rating</td>
+            <td>Numerical</td>
+            <td>Delivery agent information</td>
+        </tr>
+        <tr>
+            <td>Store/Drop Coordinates</td>
+            <td>Numerical</td>
+            <td>Location data for distance calculation</td>
+        </tr>
+        <tr>
+            <td>Weather</td>
+            <td>Categorical</td>
+            <td>Sunny, Cloudy, Stormy, Fog, Sandstorms</td>
+        </tr>
+        <tr>
+            <td>Traffic</td>
+            <td>Categorical</td>
+            <td>Low, Medium, High, Jam</td>
+        </tr>
+        <tr>
+            <td>Vehicle</td>
+            <td>Categorical</td>
+            <td>Motorcycle, Scooter, Bicycle, Van</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Slide 4: Methodology -->
+<div class="slide">
+    <h2>Methodology</h2>
+
+    <h3>ML Pipeline Flow</h3>
+    <div class="flow-diagram">
+        <div class="flow-box">Data Input</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">Preprocessing</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">Feature Engineering</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">SMOTE</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">Model Training</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">Evaluation</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">Dashboard</div>
+    </div>
+
+    <div class="two-column">
+        <div>
+            <h3>Preprocessing Steps</h3>
+            <ul>
+                <li>Handle missing values (0.2%)</li>
+                <li>Clean categorical data</li>
+                <li>Detect & clip outliers (IQR)</li>
+                <li>Feature scaling (StandardScaler)</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Class Imbalance Solution</h3>
+            <div class="warning-box">
+                <p><strong>Before SMOTE:</strong> 28% / 49% / 23%</p>
+                <p><strong>After SMOTE:</strong> 33% / 33% / 33%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Feature Engineering -->
+<div class="slide">
+    <h2>Feature Engineering</h2>
+
+    <h3>19 Engineered Features</h3>
+    <table>
+        <tr>
+            <th>Category</th>
+            <th>Features</th>
+            <th>Method</th>
+        </tr>
+        <tr>
+            <td>Distance</td>
+            <td>distance_km</td>
+            <td>Haversine Formula</td>
+        </tr>
+        <tr>
+            <td>Temporal</td>
+            <td>order_hour, day_of_week, month, is_weekend, is_rush_hour</td>
+            <td>DateTime extraction</td>
+        </tr>
+        <tr>
+            <td>Weather</td>
+            <td>weather_severity</td>
+            <td>Ordinal encoding (1-5)</td>
+        </tr>
+        <tr>
+            <td>Interaction</td>
+            <td>distance_traffic_interaction, risk_score</td>
+            <td>Feature multiplication</td>
+        </tr>
+        <tr>
+            <td>Agent</td>
+            <td>agent_experience_score</td>
+            <td>Rating × Age factor</td>
+        </tr>
+    </table>
+
+    <h3>Haversine Distance Formula</h3>
+    <div class="code-block">
+        d = 2r × arcsin(√(sin²(Δlat/2) + cos(lat₁)×cos(lat₂)×sin²(Δlon/2)))
+    </div>
+</div>
+
+<!-- Slide 6: Model Development -->
+<div class="slide">
+    <h2>Model Development</h2>
+
+    <h3>8 Algorithms Compared</h3>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>F1-Score</th>
+        </tr>
+        <tr class="best-row">
+            <td>1</td>
+            <td><strong>XGBoost</strong></td>
+            <td><strong>79.3%</strong></td>
+            <td><strong>0.793</strong></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Gradient Boosting</td>
+            <td>79.0%</td>
+            <td>0.790</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Random Forest</td>
+            <td>76.7%</td>
+            <td>0.767</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Decision Tree</td>
+            <td>72.9%</td>
+            <td>0.729</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Neural Network</td>
+            <td>72.8%</td>
+            <td>0.728</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>SVM</td>
+            <td>65.0%</td>
+            <td>0.648</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>KNN</td>
+            <td>61.9%</td>
+            <td>0.617</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Logistic Regression</td>
+            <td>55.3%</td>
+            <td>0.548</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Slide 7: Results -->
+<div class="slide">
+    <h2>Results & Evaluation</h2>
+
+    <h3>Best Model: XGBoost</h3>
+    <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-value">79.3%</div>
+            <div class="metric-label">Accuracy</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">0.79</div>
+            <div class="metric-label">Precision</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">0.79</div>
+            <div class="metric-label">Recall</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">0.79</div>
+            <div class="metric-label">F1-Score</div>
+        </div>
+    </div>
+
+    <h3>Per-Class Performance</h3>
+    <table>
+        <tr>
+            <th>Class</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-Score</th>
+            <th>Support</th>
+        </tr>
+        <tr>
+            <td>On-Time</td>
+            <td>80%</td>
+            <td>77%</td>
+            <td>78%</td>
+            <td>2,459</td>
+        </tr>
+        <tr>
+            <td>At-Risk</td>
+            <td>78%</td>
+            <td>80%</td>
+            <td>79%</td>
+            <td>4,272</td>
+        </tr>
+        <tr>
+            <td>Delayed</td>
+            <td>82%</td>
+            <td>80%</td>
+            <td>81%</td>
+            <td>2,017</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Slide 8: Key Insights -->
+<div class="slide">
+    <h2>Key Insights</h2>
+
+    <h3>Top Predictive Features</h3>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Feature</th>
+            <th>Importance</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Agent Rating</td>
+            <td>0.146</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Distance × Traffic</td>
+            <td>0.121</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Weather Severity</td>
+            <td>0.104</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Risk Score</td>
+            <td>0.092</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Distance (km)</td>
+            <td>0.088</td>
+        </tr>
+    </table>
+
+    <div class="two-column">
+        <div class="insight-box">
+            <h3>Weather Impact</h3>
+            <p>Stormy conditions increase delays by <span class="highlight">45%</span></p>
+        </div>
+        <div class="insight-box">
+            <h3>Rush Hour Effect</h3>
+            <p>Orders during 8-10 AM and 5-7 PM have <span class="highlight">25%</span> higher delay rate</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9: Dashboard -->
+<div class="slide">
+    <h2>Interactive Dashboard</h2>
+
+    <h3>Streamlit Application Features</h3>
+    <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-value">🔮</div>
+            <div class="metric-label">Real-time Prediction</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">📊</div>
+            <div class="metric-label">Data Analytics</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">🤖</div>
+            <div class="metric-label">Model Performance</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">💡</div>
+            <div class="metric-label">Business Insights</div>
+        </div>
+    </div>
+
+    <h3>Launch Command</h3>
+    <div class="code-block">
+        streamlit run dashboard/app.py
+    </div>
+
+    <div class="insight-box">
+        <h3>Live Demo</h3>
+        <p>Let's see the dashboard in action!</p>
+    </div>
+</div>
+
+<!-- Slide 10: Technologies -->
+<div class="slide">
+    <h2>Technologies Used</h2>
+
+    <h3>Tech Stack</h3>
+    <div class="tech-tags">
+        <span class="tech-tag">Python 3.10+</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">NumPy</span>
+        <span class="tech-tag">Scikit-learn</span>
+        <span class="tech-tag">XGBoost</span>
+        <span class="tech-tag">SHAP</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">Plotly</span>
+        <span class="tech-tag">Matplotlib</span>
+        <span class="tech-tag">Seaborn</span>
+    </div>
+
+    <h3>Project Structure</h3>
+    <div class="code-block">
+Amazon_Project/
+├── src/                    # Source code
+│   ├── data_preprocessing.py
+│   ├── model_training.py
+│   └── evaluation.py
+├── dashboard/              # Streamlit app
+├── notebooks/              # Jupyter EDA
+├── reports/figures/        # Visualizations
+├── models/                 # Trained models
+└── README.md               # Documentation
+    </div>
+</div>
+
+<!-- Slide 11: Conclusion -->
+<div class="slide">
+    <h2>Conclusion</h2>
+
+    <h3>Summary</h3>
+    <ul>
+        <li>Built an AI system achieving <span class="highlight">79.3% accuracy</span></li>
+        <li>Compared <span class="highlight">8 ML algorithms</span> - XGBoost performed best</li>
+        <li>Identified key factors: Distance, Weather, Traffic, Agent Rating</li>
+        <li>Created <span class="highlight">interactive dashboard</span> for real-time predictions</li>
+        <li>Provided <span class="highlight">actionable business recommendations</span></li>
+    </ul>
+
+    <h3>Future Work</h3>
+    <ul>
+        <li>Real-time API integration with carrier systems</li>
+        <li>Deep learning models (LSTM for time-series)</li>
+        <li>Automated retraining pipeline</li>
+        <li>Mobile app for logistics team</li>
+    </ul>
+</div>
+
+<!-- Slide 12: Thank You -->
+<div class="slide slide-title">
+    <h1>Thank You!</h1>
+    <p class="subtitle">Questions?</p>
+    <br><br>
+    <p class="team-info"><strong>GitHub Repository:</strong></p>
+    <p class="team-info">https://github.com/Arun07AK/Amazon_Project</p>
+    <br><br>
+    <p class="team-info"><strong>Team:</strong> ARUN AK & Team</p>
+    <p class="team-info"><strong>Course:</strong> UCS321 - AI for Engineers</p>
+</div>
+
+</body>
+</html>
