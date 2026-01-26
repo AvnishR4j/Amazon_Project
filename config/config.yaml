@@ -1,0 +1,147 @@
+# Amazon Supply Chain Intelligence - Configuration
+# ================================================
+
+project:
+  name: "Amazon Supply Chain Intelligence"
+  version: "1.0.0"
+  description: "AI-Powered Delivery Delay Risk Prediction System"
+  author: "ARUN AK"
+  course: "UCS321 - AI for Engineers"
+
+data:
+  raw_path: "data/raw/"
+  processed_path: "data/processed/"
+  dataset_name: "delivery_orders.csv"
+  train_size: 0.8
+  test_size: 0.2
+  random_state: 42
+  n_samples: 50000  # Dataset size
+
+features:
+  # Numerical features
+  numerical:
+    - order_volume
+    - warehouse_processing_time_hrs
+    - shipment_distance_km
+    - package_weight_kg
+    - package_volume_cm3
+    - historical_delay_rate
+    - carrier_reliability_score
+    - traffic_congestion_index
+    - temperature_celsius
+    - precipitation_mm
+    - wind_speed_kmh
+    - days_since_last_order
+
+  # Categorical features
+  categorical:
+    - warehouse_location
+    - destination_region
+    - carrier_name
+    - package_priority
+    - weather_condition
+    - day_of_week
+    - time_of_day
+    - is_holiday
+    - is_weekend
+    - route_type
+
+  # Target variable
+  target: "delivery_status"
+  target_classes:
+    - "On-Time"
+    - "At-Risk"
+    - "Delayed"
+
+preprocessing:
+  missing_value_strategy: "adaptive"  # mean/median/mode based on distribution
+  outlier_method: "IQR"
+  outlier_threshold: 1.5
+  scaling_method: "StandardScaler"
+  encoding_method: "TargetEncoder"
+  handle_imbalance: "SMOTE"
+  smote_sampling_strategy: "auto"
+
+models:
+  algorithms:
+    - name: "Logistic Regression"
+      class: "LogisticRegression"
+      hyperparameters:
+        C: [0.001, 0.01, 0.1, 1, 10, 100]
+        max_iter: [1000]
+        solver: ["lbfgs", "saga"]
+        multi_class: ["multinomial"]
+
+    - name: "Random Forest"
+      class: "RandomForestClassifier"
+      hyperparameters:
+        n_estimators: [100, 200, 300]
+        max_depth: [10, 20, 30, null]
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+        class_weight: ["balanced"]
+
+    - name: "XGBoost"
+      class: "XGBClassifier"
+      hyperparameters:
+        n_estimators: [100, 200, 300]
+        max_depth: [3, 5, 7, 10]
+        learning_rate: [0.01, 0.05, 0.1, 0.2]
+        subsample: [0.8, 0.9, 1.0]
+        colsample_bytree: [0.8, 0.9, 1.0]
+
+    - name: "Support Vector Machine"
+      class: "SVC"
+      hyperparameters:
+        C: [0.1, 1, 10]
+        kernel: ["rbf", "poly"]
+        gamma: ["scale", "auto"]
+        probability: [true]
+
+    - name: "K-Nearest Neighbors"
+      class: "KNeighborsClassifier"
+      hyperparameters:
+        n_neighbors: [3, 5, 7, 9, 11]
+        weights: ["uniform", "distance"]
+        metric: ["euclidean", "manhattan"]
+
+    - name: "Gradient Boosting"
+      class: "GradientBoostingClassifier"
+      hyperparameters:
+        n_estimators: [100, 200]
+        max_depth: [3, 5, 7]
+        learning_rate: [0.01, 0.05, 0.1]
+
+  cross_validation:
+    method: "StratifiedKFold"
+    n_splits: 5
+    shuffle: true
+
+  hyperparameter_tuning:
+    method: "RandomizedSearchCV"
+    n_iter: 50
+    scoring: "f1_weighted"
+
+evaluation:
+  metrics:
+    - accuracy
+    - precision_weighted
+    - recall_weighted
+    - f1_weighted
+    - roc_auc_ovr
+    - confusion_matrix
+    - classification_report
+
+  visualizations:
+    - confusion_matrix_heatmap
+    - roc_curves_multiclass
+    - precision_recall_curves
+    - feature_importance
+    - learning_curves
+    - model_comparison_radar
+
+dashboard:
+  theme: "dark"
+  primary_color: "#FF9900"  # Amazon Orange
+  secondary_color: "#232F3E"  # Amazon Dark Blue
+  port: 8501
