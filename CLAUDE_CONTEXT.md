@@ -108,3 +108,47 @@ git add -A && git commit -m "message" && git push
 
 ## Last Updated
 January 2026 - Project complete, expected marks 36-38/40 (90-95%)
+
+---
+
+## PROMPT TO MAX OUT THIS PROJECT
+
+When you return and want to make this project perfect (40/40), copy-paste this:
+
+```
+Read CLAUDE_CONTEXT.md first.
+
+I want to MAX OUT this project for a perfect 40/40 score and make it extremely impressive for my resume.
+
+Current state: 79.3% accuracy with XGBoost.
+
+Make this project stand out by:
+1. Improving model accuracy to 85%+ (hyperparameter tuning, feature selection, stacking)
+2. Adding any advanced features that will impress professors and recruiters
+3. Making the dashboard more professional
+4. Adding anything that makes this portfolio-worthy
+
+Go all out. Make it exceptional.
+```
+
+### Specific Improvement Prompts
+
+**For better accuracy:**
+```
+Read CLAUDE_CONTEXT.md. Help me improve the XGBoost model accuracy from 79.3% to 85%+ using hyperparameter tuning, feature engineering, and ensemble methods.
+```
+
+**For resume appeal:**
+```
+Read CLAUDE_CONTEXT.md. What advanced features can we add to make this project stand out on my resume? Think: API deployment, Docker, CI/CD, advanced visualizations.
+```
+
+**For dashboard improvements:**
+```
+Read CLAUDE_CONTEXT.md. Make the Streamlit dashboard more professional and impressive with better UI, more interactive features, and real-time capabilities.
+```
+
+**For presentation polish:**
+```
+Read CLAUDE_CONTEXT.md. Help me polish the presentation for my viva. Add speaker notes, improve slides, and prepare me for tough questions.
+```
