@@ -104,6 +104,16 @@ st.markdown("""
         border-radius: 10px;
     }
 
+    /* Keep text readable on light cards in dark mode */
+    .metric-card, .info-box,
+    .prediction-ontime, .prediction-atrisk, .prediction-delayed,
+    .metric-card h4, .metric-card p, .info-box h4, .info-box p, .info-box strong,
+    .prediction-ontime h2, .prediction-ontime p,
+    .prediction-atrisk h2, .prediction-atrisk p,
+    .prediction-delayed h2, .prediction-delayed p {
+        color: #1f2933 !important;
+    }
+
     /* Sidebar styling */
     .css-1d391kg {
         background-color: #232F3E;
