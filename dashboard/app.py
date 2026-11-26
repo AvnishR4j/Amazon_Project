@@ -475,26 +475,38 @@ def render_prediction():
         month = st.selectbox("Month", months,
                              format_func=lambda m: datetime(2022, m, 1).strftime('%B'))
 
+    # Prepare features exactly as in training
+    features = raw_features(
+        codes, agent_age=agent_age, agent_rating=agent_rating,
+        distance_km=distance_km, day_of_week=day_of_week, month=month,
+        order_hour=order_hour, pickup_delay_mins=pickup_delay,
+        weather=weather, traffic=traffic, vehicle=vehicle,
+        area=area, category=category
+    )
+
     # Predict button
     if st.button("🔮 Predict Delivery Risk", use_container_width=True):
-
-        # Prepare features exactly as in training
-        features = raw_features(
-            codes, agent_age=agent_age, agent_rating=agent_rating,
-            distance_km=distance_km, day_of_week=day_of_week, month=month,
-            order_hour=order_hour, pickup_delay_mins=pickup_delay,
-            weather=weather, traffic=traffic, vehicle=vehicle,
-            area=area, category=category
-        )
         input_df = to_model_input([features], scaler)
 
-        # Make prediction
-        prediction = model.predict(input_df)[0]
-        probabilities = model.predict_proba(input_df)[0]
+        # Keep the result so it stays on screen when inputs change
+        st.session_state['last_result'] = {
+            'features': features,
+            'prediction': int(model.predict(input_df)[0]),
+            'probabilities': model.predict_proba(input_df)[0],
+        }
+
+    result = st.session_state.get('last_result')
+    if result:
+        prediction = result['prediction']
+        probabilities = result['probabilities']
 
         # Display result
         st.markdown("---")
         st.markdown("### 🎯 Prediction Result")
+
+        if result['features'] != features:
+            st.info("You've changed the inputs. This result is for the earlier ones. "
+                    "Press **Predict Delivery Risk** to update it.")
 
         prediction_class = ['prediction-ontime', 'prediction-atrisk', 'prediction-delayed'][prediction]
         prediction_label = get_prediction_label(prediction)
@@ -525,7 +537,7 @@ def render_prediction():
 
         # Recommendations
         st.markdown("#### 💡 Recommendations")
-        recommendations = get_recommendation(prediction, features)
+        recommendations = get_recommendation(prediction, result['features'])
         for rec in recommendations:
             st.markdown(rec)
 
