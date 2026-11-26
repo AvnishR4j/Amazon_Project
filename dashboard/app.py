@@ -25,6 +25,8 @@ import joblib
 import os
 from datetime import datetime, timedelta
 
+from features import fit_preprocessor, raw_features, to_model_input
+
 # ============================================================================
 # PAGE CONFIGURATION
 # ============================================================================
@@ -158,6 +160,12 @@ def load_data():
 
 
 @st.cache_resource
+def load_preprocessor():
+    """Rebuild the category codes and scaler used in training."""
+    return fit_preprocessor(pd.read_csv("data/processed/processed_data.csv"))
+
+
+@st.cache_resource
 def load_model():
     """Load trained model."""
     try:
@@ -256,7 +264,7 @@ def render_sidebar():
     if model_info:
         st.sidebar.markdown("### 🎯 Model Info")
         st.sidebar.markdown(f"**Model:** {model_info.get('model_name', 'N/A')}")
-        st.sidebar.markdown(f"**CV Score:** {model_info.get('cv_score', 0):.4f}")
+        st.sidebar.markdown(f"**Test F1:** {model_info.get('cv_score', 0):.4f}")
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("""
@@ -418,27 +426,31 @@ def render_prediction():
         st.error("Model not loaded. Please train the model first.")
         return
 
+    df = load_data()
+    if df is None:
+        return
+    codes, scaler = load_preprocessor()
+    months = sorted(int(m) for m in df['month'].unique())
+    delays = sorted(int(d) for d in df['pickup_delay_mins'].unique())
+
     # Input form
     st.markdown("### 📝 Order Details")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        agent_age = st.slider("Agent Age", 18, 60, 30)
-        agent_rating = st.slider("Agent Rating", 1.0, 5.0, 4.5, 0.1)
-        distance_km = st.slider("Distance (km)", 0.1, 50.0, 10.0, 0.5)
+        agent_age = st.slider("Agent Age", int(df['agent_age'].min()), int(df['agent_age'].max()), 30)
+        agent_rating = st.slider("Agent Rating", float(df['agent_rating'].min()), 5.0, 4.5, 0.1)
+        distance_km = st.slider("Distance (km)", 1.5, 21.0, 10.0, 0.5)
 
     with col2:
         weather = st.selectbox("Weather", ['Sunny', 'Cloudy', 'Windy', 'Fog', 'Stormy', 'Sandstorms'])
         traffic = st.selectbox("Traffic", ['Low', 'Medium', 'High', 'Jam'])
-        vehicle = st.selectbox("Vehicle Type", ['motorcycle', 'scooter', 'bicycle', 'van'])
+        vehicle = st.selectbox("Vehicle Type", sorted(codes['vehicle']))
 
     with col3:
-        area = st.selectbox("Area Type", ['Urban', 'Semi-Urban', 'Metropolitian', 'Other'])
-        category = st.selectbox("Product Category", [
-            'Electronics', 'Clothing', 'Sports', 'Cosmetics', 'Toys',
-            'Grocery', 'Books', 'Kitchen', 'Home', 'Shoes'
-        ])
+        area = st.selectbox("Area Type", sorted(codes['area']))
+        category = st.selectbox("Product Category", sorted(codes['category']))
         order_hour = st.slider("Order Hour", 0, 23, 12)
 
     # Additional features
@@ -446,69 +458,27 @@ def render_prediction():
     col1, col2 = st.columns(2)
 
     with col1:
-        is_weekend = st.checkbox("Weekend Delivery")
-        is_rush_hour = st.checkbox("Rush Hour (8-10 AM or 5-7 PM)")
+        pickup_delay = st.selectbox("Pickup Delay (minutes, as in training data)", delays)
+        st.caption("Weekend and rush hour are worked out from the day and order hour.")
 
     with col2:
         day_of_week = st.selectbox("Day of Week", list(range(7)),
                                    format_func=lambda x: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][x])
-        month = st.selectbox("Month", list(range(1, 13)))
+        month = st.selectbox("Month", months,
+                             format_func=lambda m: datetime(2022, m, 1).strftime('%B'))
 
     # Predict button
     if st.button("🔮 Predict Delivery Risk", use_container_width=True):
 
-        # Prepare features
-        weather_severity_map = {'Sunny': 1, 'Cloudy': 2, 'Windy': 3, 'Fog': 4, 'Stormy': 5, 'Sandstorms': 5}
-        traffic_map = {'Low': 1, 'Medium': 2, 'High': 3, 'Jam': 4}
-        weather_encoded_map = {'Sunny': 5, 'Cloudy': 0, 'Windy': 6, 'Fog': 1, 'Stormy': 4, 'Sandstorms': 3}
-        traffic_encoded_map = {'Low': 2, 'Medium': 3, 'High': 0, 'Jam': 1}
-        vehicle_encoded_map = {'motorcycle': 2, 'scooter': 3, 'bicycle': 0, 'van': 4}
-        area_encoded_map = {'Urban': 3, 'Semi-Urban': 2, 'Metropolitian': 0, 'Other': 1}
-        category_encoded_map = {
-            'Electronics': 5, 'Clothing': 3, 'Sports': 13, 'Cosmetics': 4, 'Toys': 15,
-            'Grocery': 6, 'Books': 1, 'Kitchen': 8, 'Home': 7, 'Shoes': 12
-        }
-        time_period_map = {
-            'Morning': 1, 'Afternoon': 0, 'Evening': 2, 'Night': 3
-        }
-
-        # Determine time period
-        if 6 <= order_hour < 12:
-            time_period = 'Morning'
-        elif 12 <= order_hour < 17:
-            time_period = 'Afternoon'
-        elif 17 <= order_hour < 21:
-            time_period = 'Evening'
-        else:
-            time_period = 'Night'
-
-        weather_severity = weather_severity_map.get(weather, 2)
-        traffic_val = traffic_map.get(traffic, 2)
-
-        features = {
-            'agent_age': agent_age,
-            'agent_rating': agent_rating,
-            'distance_km': distance_km,
-            'day_of_week': day_of_week,
-            'month': month,
-            'is_weekend': int(is_weekend),
-            'order_hour': order_hour,
-            'is_rush_hour': int(is_rush_hour),
-            'pickup_delay_mins': 15,  # Default
-            'weather_severity': weather_severity,
-            'distance_traffic_interaction': distance_km * traffic_val,
-            'risk_score': distance_km * 0.3 + weather_severity * 10 + int(is_rush_hour) * 15,
-            'agent_experience_score': agent_rating * (1 - (agent_age - 20) / 40),
-            'weather_encoded': weather_encoded_map.get(weather, 0),
-            'traffic_encoded': traffic_encoded_map.get(traffic, 0),
-            'vehicle_encoded': vehicle_encoded_map.get(vehicle, 0),
-            'area_encoded': area_encoded_map.get(area, 0),
-            'category_encoded': category_encoded_map.get(category, 0),
-            'time_period_encoded': time_period_map.get(time_period, 0)
-        }
-
-        # Create DataFrame for prediction
-        input_df = pd.DataFrame([features])
+        # Prepare features exactly as in training
+        features = raw_features(
+            codes, agent_age=agent_age, agent_rating=agent_rating,
+            distance_km=distance_km, day_of_week=day_of_week, month=month,
+            order_hour=order_hour, pickup_delay_mins=pickup_delay,
+            weather=weather, traffic=traffic, vehicle=vehicle,
+            area=area, category=category
+        )
+        input_df = to_model_input([features], scaler)
 
         # Make prediction
         prediction = model.predict(input_df)[0]
@@ -784,6 +754,9 @@ def render_insights():
     if df is None:
         return
 
+    st.warning("The findings, impact figures and ROI projection on this page are illustrative. "
+               "They are typed into the app, not calculated from the data or the model.")
+
     # Key insights
     st.markdown("### 🎯 Key Findings")
 
@@ -922,6 +895,7 @@ def main():
     <div class="footer">
         <p><strong>Amazon Supply Chain Intelligence</strong> | Built with Streamlit</p>
         <p>UCS321 - AI for Engineers | ARUN AK | 2024</p>
+        <p>Student project. Not affiliated with or endorsed by Amazon.</p>
     </div>
     """, unsafe_allow_html=True)
 

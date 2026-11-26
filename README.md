@@ -21,6 +21,19 @@
 
 ---
 
+## About This Copy
+
+Based on the original project by ARUN AK: https://github.com/Arun07AK/Amazon_Project (MIT License, see [LICENSE](LICENSE)). This is a student project, not affiliated with or endorsed by Amazon.
+
+Changes in this copy:
+- Fixed the prediction form so its scaling, category codes and engineered features match training
+- Shortened `requirements.txt` for deployment (original list in `requirements-full.txt`)
+- Added the trained model files the dashboard needs, and updated the model comparison results
+
+The figures elsewhere in this README come from the original project.
+
+---
+
 ## Overview
 
 **Amazon Supply Chain Intelligence** is an end-to-end machine learning solution designed to predict delivery delay risk levels for e-commerce orders. Using real Amazon delivery data from Kaggle (43,739 records), this system categorizes deliveries into three risk categories: **On-Time**, **At-Risk**, and **Delayed**.
