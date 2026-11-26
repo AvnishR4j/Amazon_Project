@@ -279,9 +279,7 @@ def render_sidebar():
     st.sidebar.markdown("---")
     st.sidebar.markdown("""
     <div style="text-align: center; color: #888; font-size: 0.8rem;">
-        <p>Built for UCS321</p>
-        <p>AI for Engineers</p>
-        <p>© 2024 ARUN AK</p>
+        <p>Student project</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -904,7 +902,6 @@ def main():
     st.markdown("""
     <div class="footer">
         <p><strong>Amazon Supply Chain Intelligence</strong> | Built with Streamlit</p>
-        <p>UCS321 - AI for Engineers | ARUN AK | 2024</p>
         <p>Student project. Not affiliated with or endorsed by Amazon.</p>
     </div>
     """, unsafe_allow_html=True)
